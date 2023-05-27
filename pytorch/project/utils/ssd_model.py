@@ -324,7 +324,7 @@ def make_extras():
     in_channels = 1024  # vgg모듈에서 출력된, extra에 입력되는 이미지 채널 수
 
     # vgg모듈에서 출력된, extra에 입력되는 이미지 채널 수
-    #cfg = [256, 512, 128, 256, 128, 256, 128, 256] #--> default
+    #cfg = [256, 512, 128, 256, 128, 256, 128, 256] --> default
     cfg = [256, 512, 256, 512, 256, 512, 256, 512]
 
     layers += [nn.Conv2d(in_channels, cfg[0], kernel_size=(1))]
@@ -430,6 +430,37 @@ class L2Norm(nn.Module):
         out = weights * x
 
         return out
+
+class L2Norm_2(nn.Module):
+    def __init__(self, input_channels=1024, scale=20):
+        super(L2Norm_2, self).__init__()  # 부모 클래스의 생성자 실행
+        self.weight = nn.Parameter(torch.Tensor(input_channels))
+        self.scale = scale  # 계수 weight의 초기값으로 설정할 값
+        self.reset_parameters()  # 파라미터의 초기화
+        self.eps = 1e-10
+
+    def reset_parameters(self):
+        init.constant_(self.weight, self.scale)  # weight의 값이 모두 scale(=20)이 된다
+
+    def forward(self, x):
+        '''38×38의 특징량에 대해 512 채널에 걸쳐 제곱합의 루트를 구했다
+        38×38개의 값을 사용하여 각 특징량을 정규화한 후 계수를 곱하여 계산하는 층'''
+
+        # 각 채널에서의 38×38개의 특징량의 채널 방향의 제곱합을 계산하고,
+        # 또한 루트를 구해 나누어 정규화한다
+        # norm의 텐서 사이즈는 torch.Size([batch_num, 1, 38, 38])입니다
+        norm = x.pow(2).sum(dim=1, keepdim=True).sqrt()+self.eps
+        x = torch.div(x, norm)
+
+        # 계수를 곱한다. 계수는 채널마다 하나로, 512개의 계수를 갖는다
+        # self.weight의 텐서 사이즈는 torch.Size([512])이므로
+        # torch.Size([batch_num, 512, 38, 38])까지 변형합니다
+        weights = self.weight.unsqueeze(
+            0).unsqueeze(2).unsqueeze(3).expand_as(x)
+        out = weights * x
+
+        return out
+
 
 
 # 디폴트 박스를 출력하는 클래스
@@ -744,6 +775,7 @@ class SSD(nn.Module):
         self.vgg = make_vgg()
         self.extras = make_extras()
         self.L2Norm = L2Norm()
+        self.L2Norm_2 = L2Norm_2()
         # HOON : issue. cfg?
         self.loc, self.conf = make_loc_conf(
             cfg["num_classes"], cfg["bbox_aspect_num"])
@@ -783,15 +815,16 @@ class SSD(nn.Module):
         # vgg를 끝까지 계산하여, source3를 작성하고, sources에 추가
         for k in range(30, len(self.vgg)):
             x = self.vgg[k](x)
-
-        sources.append(x)
+        source3 = self.L2Norm_2(x)
+        sources.append(source3)
 
         # extras의 conv와 ReLU를 계산
         # source4~7을 sources에 추가
         for k, v in enumerate(self.extras):
             x = F.relu(v(x), inplace=True)
             if k % 2 == 1:  # conv→ReLU→cov→ReLU를 하여 source에 넣는다
-                sources.append(x)
+                source = self.L2Norm(x)
+                sources.append(source)
 
         # source1~7에 각각 대응하는 합성곱을 1회씩 적용한다
         # zip으로 for 루프의 여러 리스트 요소를 취득
