@@ -324,8 +324,8 @@ def make_extras():
     in_channels = 1024  # vgg모듈에서 출력된, extra에 입력되는 이미지 채널 수
 
     # vgg모듈에서 출력된, extra에 입력되는 이미지 채널 수
-    cfg = [256, 512, 128, 256, 128, 256, 128, 256] #--> default
-    #cfg = [256, 512, 256, 512, 256, 512, 256, 512]
+    #cfg = [256, 512, 128, 256, 128, 256, 128, 256] #--> default
+    cfg = [256, 512, 256, 512, 256, 512, 256, 512]
 
     layers += [nn.Conv2d(in_channels, cfg[0], kernel_size=(1))]
     layers += [nn.Conv2d(cfg[0], cfg[1], kernel_size=(3), stride=2, padding=1)]
@@ -376,21 +376,21 @@ def make_loc_conf(num_classes=21, bbox_aspect_num=[4,6,6,6,6,4,4]):
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source5)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(256, bbox_aspect_num[4]
+    loc_layers += [nn.Conv2d(512, bbox_aspect_num[4]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(256, bbox_aspect_num[4]
+    conf_layers += [nn.Conv2d(512, bbox_aspect_num[4]
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source6)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(256, bbox_aspect_num[5]
+    loc_layers += [nn.Conv2d(512, bbox_aspect_num[5]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(256, bbox_aspect_num[5]
+    conf_layers += [nn.Conv2d(512, bbox_aspect_num[5]
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source7)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(256, bbox_aspect_num[6]
+    loc_layers += [nn.Conv2d(512, bbox_aspect_num[6]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(256, bbox_aspect_num[6]
+    conf_layers += [nn.Conv2d(512, bbox_aspect_num[6]
                               * num_classes, kernel_size=3, padding=1)]
 
     return nn.ModuleList(loc_layers), nn.ModuleList(conf_layers)

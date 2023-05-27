@@ -27,16 +27,16 @@ ssd_cfg = {
 }
 
 # SSD300 설정
-ssd_cfg = {
-    'num_classes': 21,  # 배경 클래스를 포함한 총 클래스 수
-    'input_size': 300,  # 이미지의 입력 크기
-    'bbox_aspect_num': [4, 6, 6, 6, 4, 4],  # 출력할 DBox 화면비 종류
-    'feature_maps': [38, 19, 10, 5, 3, 1],  # 각 source의 이미지 크기
-    'steps': [8, 16, 32, 64, 100, 300],  # DBOX의 크기를 결정
-    'min_sizes': [30, 60, 111, 162, 213, 264],  # DBOX의 크기를 결정
-    'max_sizes': [60, 111, 162, 213, 264, 315],  # DBOX의 크기를 결정
-    'aspect_ratios': [[2], [2, 3], [2, 3], [2, 3], [2], [2]],
-}
+#ssd_cfg = {
+#    'num_classes': 21,  # 배경 클래스를 포함한 총 클래스 수
+#    'input_size': 300,  # 이미지의 입력 크기
+#    'bbox_aspect_num': [4, 6, 6, 6, 4, 4],  # 출력할 DBox 화면비 종류
+#    'feature_maps': [38, 19, 10, 5, 3, 1],  # 각 source의 이미지 크기
+#    'steps': [8, 16, 32, 64, 100, 300],  # DBOX의 크기를 결정
+#    'min_sizes': [30, 60, 111, 162, 213, 264],  # DBOX의 크기를 결정
+#    'max_sizes': [60, 111, 162, 213, 264, 315],  # DBOX의 크기를 결정
+#    'aspect_ratios': [[2], [2, 3], [2, 3], [2, 3], [2], [2]],
+#}
 
 # SSD 네트워크 모델
 net = SSD(phase="inference", cfg=ssd_cfg)
