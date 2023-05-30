@@ -776,7 +776,7 @@ class SSD(nn.Module):
         self.vgg = make_vgg()
         self.extras = make_extras()
         self.L2Norm = L2Norm()
-        self.L2Norm_2 = L2Norm_2()
+        #self.L2Norm_2 = L2Norm_2()
         # HOON : issue. cfg?
         self.loc, self.conf = make_loc_conf(
             cfg["num_classes"], cfg["bbox_aspect_num"])
@@ -816,8 +816,8 @@ class SSD(nn.Module):
         # vgg를 끝까지 계산하여, source3를 작성하고, sources에 추가
         for k in range(30, len(self.vgg)):
             x = self.vgg[k](x)
-        source3 = self.L2Norm_2(x)
-        sources.append(source3)
+        #source3 = self.L2Norm_2(x) ---> NOTE error point 
+        sources.append(x)
 
         # extras의 conv와 ReLU를 계산
         # source4~7을 sources에 추가
