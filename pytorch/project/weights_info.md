@@ -3,4 +3,10 @@
 3. modified (add +1 feature map) -> 46.527 mAP
 4. (3) + (change extra's layers' filer's number) -> 47.944 mAP
 5. (4) + make all feature map go to L2Norm ->  failed. too much normalization 
-6. (*) +N feature map ? (vanilla + change a few of L2Norm + add a few of feature map ) -> ??? mAP
+6. (3) + (change extra's layers' filer's number more) + (1,2,3 featuremap via L2Norm) -> ??? mAP
+7. (6) +N feature map  ( ) -> ??? mAP
+                     
+
+++ optimizer (use ADAGRAD .. ADAM .. Momentum.... )
+++ activation func (leaky_Relu)
+++ etc (methods for forbiden overfitting) 

@@ -325,7 +325,8 @@ def make_extras():
 
     # vgg모듈에서 출력된, extra에 입력되는 이미지 채널 수
     #cfg = [256, 512, 128, 256, 128, 256, 128, 256] --> default
-    cfg = [256, 512, 256, 512, 256, 512, 256, 512]
+    #cfg = [256, 512, 256, 512, 256, 512, 256, 512]
+    cfg = [256, 1024, 256, 1024, 256, 1024, 256, 1024]
 
     layers += [nn.Conv2d(in_channels, cfg[0], kernel_size=(1))]
     layers += [nn.Conv2d(cfg[0], cfg[1], kernel_size=(3), stride=2, padding=1)]
@@ -370,27 +371,27 @@ def make_loc_conf(num_classes=21, bbox_aspect_num=[4,6,6,6,6,4,4]):
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source4)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(512, bbox_aspect_num[3]
+    loc_layers += [nn.Conv2d(1024, bbox_aspect_num[3]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(512, bbox_aspect_num[3]
+    conf_layers += [nn.Conv2d(1024, bbox_aspect_num[3]
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source5)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(512, bbox_aspect_num[4]
+    loc_layers += [nn.Conv2d(1024, bbox_aspect_num[4]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(512, bbox_aspect_num[4]
+    conf_layers += [nn.Conv2d(1024, bbox_aspect_num[4]
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source6)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(512, bbox_aspect_num[5]
+    loc_layers += [nn.Conv2d(1024, bbox_aspect_num[5]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(512, bbox_aspect_num[5]
+    conf_layers += [nn.Conv2d(1024, bbox_aspect_num[5]
                               * num_classes, kernel_size=3, padding=1)]
 
     # extra(source7)에 대한 합성곱층
-    loc_layers += [nn.Conv2d(512, bbox_aspect_num[6]
+    loc_layers += [nn.Conv2d(1024, bbox_aspect_num[6]
                              * 4, kernel_size=3, padding=1)]
-    conf_layers += [nn.Conv2d(512, bbox_aspect_num[6]
+    conf_layers += [nn.Conv2d(1024, bbox_aspect_num[6]
                               * num_classes, kernel_size=3, padding=1)]
 
     return nn.ModuleList(loc_layers), nn.ModuleList(conf_layers)
@@ -823,8 +824,9 @@ class SSD(nn.Module):
         for k, v in enumerate(self.extras):
             x = F.relu(v(x), inplace=True)
             if k % 2 == 1:  # conv→ReLU→cov→ReLU를 하여 source에 넣는다
-                source = self.L2Norm(x)
-                sources.append(source)
+                #source = self.L2Norm(x)
+                #sources.append(source)
+                sources.append(x)
 
         # source1~7에 각각 대응하는 합성곱을 1회씩 적용한다
         # zip으로 for 루프의 여러 리스트 요소를 취득
