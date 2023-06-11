@@ -1,0 +1,23 @@
+Top 10 Influential Positive Words:
+- excellent
+- delicious
+- tasty
+- amazing
+- great
+- nice
+- best
+- enjoyed
+- loved
+- must
+Top 10 Influential Negative Words:
+- worst
+- terrible
+- pathetic
+- horrible
+- bad
+- poor
+- never
+- tasteless
+- avoid
+- rude
+

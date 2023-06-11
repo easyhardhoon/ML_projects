@@ -64,6 +64,7 @@ model.fit(train_data, train_ratings, epochs=1, batch_size=32) #epoch 10
 #--------------------------------------------------------------------------------
 #5. model predict
 predictions = model.predict(test_data)
+predictions = predictions.astype(int)
 for i in range(len(test_reviews)):
     print("Review:", test_reviews[i])
     print("Predicted Rating:", predictions[i])
@@ -71,12 +72,19 @@ for i in range(len(test_reviews)):
 #--------------------------------------------------------------------------------
 #6. visualize
 import matplotlib.pyplot as plt
-plt.figure(figsize=(10, 6))
-plt.scatter(range(len(test_reviews)), test_ratings, label='Actual')
-plt.scatter(range(len(test_reviews)), predictions, label='Predicted')
-plt.xlabel('Review Index')
-plt.ylabel('Rating')
-plt.title('Actual vs. Predicted Ratings')
-plt.legend()
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.scatter(range(len(test_reviews)), test_ratings, label='Actual')
+ax.set_xlabel('Review Index')
+ax.set_ylabel('Rating')
+ax.set_title('Actual')
+ax.legend()
 plt.show()
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.scatter(range(len(test_reviews)), predictions, label='Predicted')
+ax.set_xlabel('Review Index')
+ax.set_ylabel('Rating')
+ax.set_title('Predicted')
+ax.legend()
+plt.show()
+
 

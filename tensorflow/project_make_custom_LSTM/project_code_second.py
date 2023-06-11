@@ -83,7 +83,7 @@ print("Top", top_n, "Influential Negative Words:")
 for word in top_influential_negative_words:
     print("-", word)
 #--------------------------------------------------------------------------------
-#7. 시각화
+# 8. 시각화
 plt.figure(figsize=(8, 5))
 plt.bar(top_influential_positive_words, coef_df[coef_df['Coefficient'] < 0].head(top_n)['Coefficient'], color='green')
 plt.xlabel('Word')
