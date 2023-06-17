@@ -15,5 +15,8 @@
 
 ++ optimizer (use ADAGRAD .. ADAM .. Momentum.... )
 ++ activation func (leaky_Relu)
-++ etc (methods for forbiden overfitting) 
+++ etc (methods for forbiden overfitting)
+
+...etc methods.... [Need update] 
+ 
 
